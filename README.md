@@ -1,11 +1,37 @@
-# AREPT1-WebServer
+# AREPT2-Microframework
 
-In this project, a web server implementation has been developed **without web frameworks**, using only `java.net`.  
-The server is able to:
+This project aims to enhance an existing web server, which currently supports HTML files, JavaScript, CSS, and images, by converting it into a fully functional web framework. This framework will enable the development of web applications with backend REST services. The new framework will provide developers with tools to define REST services using lambda functions, manage query values within requests, and specify the location of static files.
 
-- Return **static files** stored in the local disk (HTML, CSS, JS, images).
-- Provide a simple **REST API** for managing users (`GET`, `POST`, `DELETE`).
+---
+## Architecture
 
+### Main components
+
+- **`HttpServer`** – Accepts TCP connections via `ServerSocket`, parses the request line, routes `/api/...` to services or serves static files from disk. It writes the HTTP status line, headers (`Content-Type`, `Content-Length`, `Connection`) and the response body.
+- **`WebApplication`** – Application entry point: registers the static files directory and binds service routes (e.g., `/users`), then starts the server.
+- **`Service`** – Functional interface for HTTP handlers (`executeService(HttpRequest, HttpResponse)`).
+- **`HttpRequest`** – Minimal wrapper around the request URI with helpers to read query parameters.
+- **`HttpResponse`** – Holder for response metadata (status, content type). Extend as needed.
+
+### Request flow
+
+```
+Client
+  |
+  v
+[HttpServer] --accept--> [Socket]
+  | parse "METHOD /path HTTP/1.1"
+  +--> if path starts with /api -----> [Service Router] -> [Service impl] -> (User repo)
+  |                                       | sets status/content-type on HttpResponse
+  |                                       '-- returns JSON/body (String/bytes)
+  '--> else ----------------------------> [Static Handler] -> read file -> MIME + bytes
+
+[HttpServer] writes:
+- Status-Line + Headers (Content-Type, Content-Length, Connection: close)
+- CRLF (\r\n)
+- Body
+then closes the socket
+```
 ---
 
 ## Getting Started
@@ -30,12 +56,12 @@ Before running the project, ensure you have installed:
 Clone and build the project:
 
 ```bash
-git clone https://github.com/JaiderVargas05/AREPT1-WebServer.git
+git clone https://github.com/JaiderVargas05/AREPT2-Microframework.git
 ```
 **Clones the repository** from GitHub into your local machine.
 
 ```bash
-cd AREPT1-WebServer/httpserver
+cd AREPT2-Microframework/httpserver
 ```
 **Moves into the project folder** that was just cloned.
 
@@ -79,17 +105,6 @@ The server listens on port **35000**, ready to serve static files and respond to
 
 #### 2. API: Users
 
-- **Create user (POST):**
-
-```
-http://localhost:35000/api/users?name=Jaider&age=18
-```
-
-Response:
-```json
-{"id":"1","name":"Jaider","age":"18"}
-```
-
 - **Get user (GET):**
 
 ```
@@ -98,18 +113,8 @@ http://localhost:35000/api/users?id=1
 
 Response:
 ```json
-{"id":"1","name":"Jaider","age":"18"}
+{"id":1,"name":"Jaider","age":18}
 ```
-
-- **Delete user (DELETE):**
-
-```
-http://localhost:35000/api/users?id=1
-```
-
-Response:  
-`200 OK`
-
 ---
 
 ## Running the tests
@@ -120,13 +125,13 @@ Execute the test suite with:
 mvn test
 ```
 
-### Test coverage
+## What the tests cover
 
-The tests validate:
-
-- Static file serving (HTML, CSS, JS, images).  
-- API endpoints for users (`GET`, `POST`, `DELETE`).  
-- Error handling (`404 Not Found`).  
+- **Server up & index** — `GET /` returns `200` and `text/html`.
+- **Static files** — CSS, JS and JPG are served with the correct content types and non‑empty content.
+- **404 for missing file** — `GET /eci.com` → `404`.
+- **Users API round‑trip** — `GET /api/users?id=<id>`; asserts `id`, `name`, `age`.
+- **User not found** — `GET /api/users?id=999999` → `404`.
 
 
 ---
