@@ -106,6 +106,7 @@ The server listens on port **35000**, ready to serve static files and respond to
 #### 2. API: Users
 
 - **Get user (GET):**
+<img width="1756" height="619" alt="image" src="https://github.com/user-attachments/assets/f99098f1-442a-4315-bba4-5fd3fff5e2c9" />
 
 ```
 http://localhost:35000/api/users?id=1
@@ -113,7 +114,7 @@ http://localhost:35000/api/users?id=1
 
 Response:
 ```json
-{"id":1,"name":"Jaider","age":18}
+{"id":1,"name":"Alice","age":25}
 ```
 ---
 
