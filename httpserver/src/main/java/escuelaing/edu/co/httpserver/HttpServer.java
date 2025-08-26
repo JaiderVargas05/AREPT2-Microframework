@@ -33,7 +33,7 @@ public class HttpServer {
     };
     public static Map<String, Service> services = new HashMap<String, Service>();
     private static final UserService userService = new UserService();
-    private static Path basePath = Paths.get("src/main/resources/static").toAbsolutePath().normalize();
+    private static Path basePath;
 
     public static void startServer(String[] args) throws IOException, Exception {
         ServerSocket serverSocket = null;
