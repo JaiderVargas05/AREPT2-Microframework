@@ -7,16 +7,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-        <h1>CREATE USER</h1>
-    <form action="/hellopost">
-        <label for="postname">Name:</label><br>
-        <input type="text" id="postname" name="name" value=""><br><br>
-        <label for="postname">Age:</label><br>
-        <input type="text" id="postage" name="age" value=""><br><br>
-        <input type="button" value="Submit" onclick="loadPostMsg(postname,postage)">
-    </form>
-
-    <div id="postrespmsg"></div>
     <h1>GET USER</h1>
     <form action="/hello">
         <label for="userId">User Id:</label><br>
@@ -25,18 +15,5 @@
     </form>
     <div id="getrespmsg"></div>
 
-
-
-
-    
-    <h1>DELETE USER</h1>
-    <form action="/hellodelete">
-        <label for="deleteId">User Id:</label><br>
-        <input type="text" id="deleteId" name="deleteId" value=""><br><br>
-        <input type="button" value="Submit" onclick="loadDeleteMsg(deleteId)">
-    </form>
-
-    <div id="deleterespmsg"></div>
-    <script src="app.js"></script>
 </body>
 </html>
